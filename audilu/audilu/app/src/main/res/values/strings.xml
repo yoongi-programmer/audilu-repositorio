@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">audilu</string>
+    <string name="mi_aplicaci_n">Mi Aplicación</string>
+    <string name="desconectar">Desconectar</string>
+    <string name="audilu">Audilu</string>
+    <string name="conectar">Conectar</string>
+    <string name="buscar">Buscar</string>
+    <string name="temp">Temperatura</string>
+    <string name="hum">Humedad</string>
+    <string name="sonido">Sonido</string>
+    <string name="mov">Movimiento</string>
+    <string name="contentDescription">Logo</string>
+</resources>
