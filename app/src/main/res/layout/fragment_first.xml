@@ -115,6 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#DCCEA6"
+                android:spinnerMode="dropdown"
                 tools:visibility="visible" />
 
             <LinearLayout
