@@ -25,15 +25,16 @@ import java.io.IOException
 import java.util.UUID
 
 class FirstFragment : Fragment() {
-    /* CREACION DE VARIABLES----------------------------------------------------------*/
     private lateinit var bluetooth: BluJhr
     private var devicesBluetooth = ArrayList<String>()
     private var _binding: FragmentFirstBinding? = null
     private val binding get() = _binding!!
     private val bluetoothPermissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         if (permissions.all { it.value }) {
+            Log.d("FirstFragment", "Bluetooth permissions granted")
             searchAndDisplayBluetoothDevices()
         } else {
+            Log.d("FirstFragment", "Bluetooth permissions denied")
             Snackbar.make(requireView(), "Bluetooth permissions denied", Snackbar.LENGTH_SHORT).show()
         }
     }
@@ -53,13 +54,14 @@ class FirstFragment : Fragment() {
     private var movement = 0
     private var sound = 0
 
-    /* VISTA--------------------------------------------------------------------------*/
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
         bluetooth = BluJhr(requireContext())
+
+        Log.d("FirstFragment", "Requesting Bluetooth permissions")
         requestBluetoothPermissions()
 
         binding.listDeviceBluetooth.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -95,8 +97,6 @@ class FirstFragment : Fragment() {
         return binding.root
     }
 
-    /* FUNCIONES----------------------------------------------------------------------*/
-    // PERMISOS
     private fun requestBluetoothPermissions() {
         val requiredPermissions = arrayOf(
             android.Manifest.permission.BLUETOOTH_CONNECT,
@@ -106,8 +106,10 @@ class FirstFragment : Fragment() {
             ContextCompat.checkSelfPermission(requireContext(), it) != PackageManager.PERMISSION_GRANTED
         }
         if (missingPermissions.isNotEmpty()) {
+            Log.d("FirstFragment", "Launching Bluetooth permissions launcher")
             bluetoothPermissionsLauncher.launch(missingPermissions.toTypedArray())
         } else {
+            Log.d("FirstFragment", "All Bluetooth permissions already granted")
             searchAndDisplayBluetoothDevices()
         }
     }
@@ -155,7 +157,7 @@ class FirstFragment : Fragment() {
                     bytes = inputStream.read(buffer)
                     val data = String(buffer, 0, bytes)
                     parseData(data)
-                    updateUI()
+                    requireActivity().runOnUiThread { updateUI() }
                 } catch (e: IOException) {
                     break
                 }
@@ -187,5 +189,14 @@ class FirstFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        try {
+            if (::bluetoothSocket.isInitialized) {
+                // Tu código para manejar la desconexión o limpieza del socket
+                bluetoothSocket.close()
+            }
+        } catch (e: UninitializedPropertyAccessException) {
+            Log.e("FirstFragment", "bluetoothSocket no ha sido inicializado", e)
+        }
+
     }
 }

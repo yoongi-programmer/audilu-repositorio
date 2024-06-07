@@ -5,7 +5,6 @@
     <!-- Permisos de bluetooth-->
     <uses-permission android:name="android.permission.BLUETOOTH" /> <!--principal-->
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!--principal-->
-    <uses-permission android:name="android.permission.BLUETOOTH_ADAPTER" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
