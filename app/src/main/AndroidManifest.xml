@@ -2,15 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Permisos de bluetooth-->
-    <uses-permission android:name="android.permission.BLUETOOTH" /> <!--principal-->
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!--principal-->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!-- Permisos de bluetooth para android 11 y anteriores-->
+    <uses-permission android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30"/>
+    <!-- Permisos de BLUETOOTH para android 12 y posteriores-->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-
+    <uses-feature android:name="android.hardware.bluetooth" android:required="true"/>
     <!-- Permisos de Vibracion-->
     <uses-permission android:name="android.permission.VIBRATE"/>
     <!--Permisos de camara para flash-->

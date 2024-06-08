@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -61,8 +62,13 @@ class FirstFragment : Fragment() {
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
         bluetooth = BluJhr(requireContext())
 
-        Log.d("FirstFragment", "Requesting Bluetooth permissions")
-        requestBluetoothPermissions()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {//CONTROLA LA VERSION DE ANDROIRD
+            Log.d("FirstFragment", "Requesting permissions for android 12+")
+            requestBluetoothPermissions()// Solicitar permisos de Bluetooth para Android 12+
+        } else {
+            Log.d("FirstFragment", "Requesting permissions for android 11-")
+            requestLegacyBluetoothPermissions()// Solicitar permisos de Bluetooth para Android 11 y anteriores
+        }
 
         binding.listDeviceBluetooth.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
@@ -72,17 +78,23 @@ class FirstFragment : Fragment() {
                         override fun onConnectState(state: BluJhr.Connected) {
                             when (state) {
                                 BluJhr.Connected.True -> {
+                                    Log.d("FirstFragment", "STATE: CONNECTED")
                                     Snackbar.make(requireView(), "True", Snackbar.LENGTH_SHORT).show()
+                                    Log.d("FirstFragment","Inicializando Bluetooth")
                                     initBluetooth()
+                                    Log.d("FirstFragment","Function StartDataReciving")
                                     startDataReceiving()
                                 }
                                 BluJhr.Connected.Pending -> {
+                                    Log.d("FirstFragment","STATE: PENDING")
                                     Snackbar.make(requireView(), "Pending", Snackbar.LENGTH_SHORT).show()
                                 }
                                 BluJhr.Connected.False -> {
+                                    Log.d("FirstFragment", "STATE: FALSE")
                                     Snackbar.make(requireView(), "False", Snackbar.LENGTH_SHORT).show()
                                 }
                                 BluJhr.Connected.Disconnect -> {
+                                    Log.d("FirstFragment", "STATE: DISCONNECT")
                                     Snackbar.make(requireView(), "Disconnect", Snackbar.LENGTH_SHORT).show()
                                 }
                             }
@@ -114,6 +126,24 @@ class FirstFragment : Fragment() {
         }
     }
 
+    private fun requestLegacyBluetoothPermissions() {
+        val requiredPermissions = arrayOf(
+            android.Manifest.permission.BLUETOOTH,
+            android.Manifest.permission.BLUETOOTH_ADMIN
+        )
+        Log.d("FirstFragment", "Checking permissions")
+        val missingPermissions = requiredPermissions.filter {
+            ContextCompat.checkSelfPermission(requireContext(), it) != PackageManager.PERMISSION_GRANTED
+        }
+        if (missingPermissions.isNotEmpty()) {
+            bluetoothPermissionsLauncher.launch(missingPermissions.toTypedArray())
+            Log.d("FirstFragment", "Missing Permission. Launching")
+        } else {
+            Log.d("FirstFragment", "All Bluetooth permissions already granted")
+            searchAndDisplayBluetoothDevices()
+        }
+    }
+
     private fun searchAndDisplayBluetoothDevices() {
         if (!bluetooth.stateBluetoooth()) {
             enableBluetoothLauncher.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
@@ -135,7 +165,9 @@ class FirstFragment : Fragment() {
 
         try {
             val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+            Log.d("FirstFragment", "Creat a socket")
             bluetoothSocket = bluetoothDevice.createRfcommSocketToServiceRecord(uuid)
+            Log.d("FirstFragment", "Try to connect")
             bluetoothSocket.connect()
         } catch (e: IOException) {
             Log.e("FirstFragment", "Error connecting Bluetooth: $e")
@@ -154,6 +186,7 @@ class FirstFragment : Fragment() {
         Thread {
             while (true) {
                 try {
+                    Log.d("FirstFragment", "Try the receipt of data")
                     bytes = inputStream.read(buffer)
                     val data = String(buffer, 0, bytes)
                     parseData(data)
@@ -166,6 +199,7 @@ class FirstFragment : Fragment() {
     }
 
     private fun parseData(data: String) {
+        Log.d("FirstFragment", "Parsing data")
         val parts = data.split("|")
         if (parts.size == 4) {
             try {
@@ -180,6 +214,7 @@ class FirstFragment : Fragment() {
     }
 
     private fun updateUI() {
+        Log.d("FirstFragment", "Updating the User Interface ")
         binding.valTemp.text = "$temperature °C"
         binding.valHum.text = "$humidity %"
         binding.valMov.text = if (movement == 1) "Movimiento" else "Quieto"
@@ -191,6 +226,7 @@ class FirstFragment : Fragment() {
         _binding = null
         try {
             if (::bluetoothSocket.isInitialized) {
+                Log.d("FirstFragment", "Closing socket")
                 // Tu código para manejar la desconexión o limpieza del socket
                 bluetoothSocket.close()
             }
