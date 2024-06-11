@@ -162,7 +162,7 @@ class FirstFragment : Fragment() {
             }
         }
     }
-
+//
     private fun connectToDevice(device: BluetoothDevice) {
         Thread {
             try {
