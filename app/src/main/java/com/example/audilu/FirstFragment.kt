@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.audilu.bluetooth.bluetoothManager
 import com.example.audilu.databinding.FragmentFirstBinding
 import com.google.android.material.snackbar.Snackbar
 import com.ingenieriajhr.blujhr.BluJhr
@@ -27,7 +28,7 @@ import java.util.UUID
 
 class FirstFragment : Fragment() {
     private lateinit var bluetooth: BluJhr
-    private var devicesBluetooth = ArrayList<String>()
+//    private var devicesBluetooth = ArrayList<String>()
     private var _binding: FragmentFirstBinding? = null
     private val binding get() = _binding!!
     private val bluetoothPermissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -46,10 +47,15 @@ class FirstFragment : Fragment() {
             Snackbar.make(requireView(), "Bluetooth not enabled", Snackbar.LENGTH_SHORT).show()
         }
     }
-    private lateinit var bluetoothAdapter: BluetoothAdapter
-    private lateinit var bluetoothDevice: BluetoothDevice
-    private lateinit var bluetoothSocket: BluetoothSocket
+    private var bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+    private var bluetoothSocket: BluetoothSocket? = null
     private lateinit var bluetoothManager: BluetoothManager
+    private var isConnected: Boolean = false
+    private lateinit var devicesBluetooth: List<BluetoothDevice>
+    private lateinit var bluetoothDevice: BluetoothDevice
+//    private lateinit var bluetoothAdapter: BluetoothAdapter
+//    private lateinit var bluetoothDevice: BluetoothDevice
+//    private lateinit var bluetoothSocket: BluetoothSocket
     private var temperature = 0
     private var humidity = 0
     private var movement = 0
@@ -73,39 +79,27 @@ class FirstFragment : Fragment() {
         binding.listDeviceBluetooth.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 if (devicesBluetooth.isNotEmpty()) {
-                    bluetooth.connect(devicesBluetooth[position])
-                    bluetooth.setDataLoadFinishedListener(object : BluJhr.ConnectedBluetooth {
-                        override fun onConnectState(state: BluJhr.Connected) {
-                            when (state) {
-                                BluJhr.Connected.True -> {
-                                    Log.d("FirstFragment", "STATE: CONNECTED")
-                                    Snackbar.make(requireView(), "True", Snackbar.LENGTH_SHORT).show()
-                                    Log.d("FirstFragment","Inicializando Bluetooth")
-                                    initBluetooth()
-                                    Log.d("FirstFragment","Function StartDataReciving")
-                                    startDataReceiving()
-                                }
-                                BluJhr.Connected.Pending -> {
-                                    Log.d("FirstFragment","STATE: PENDING")
-                                    Snackbar.make(requireView(), "Pending", Snackbar.LENGTH_SHORT).show()
-                                }
-                                BluJhr.Connected.False -> {
-                                    Log.d("FirstFragment", "STATE: FALSE")
-                                    Snackbar.make(requireView(), "False", Snackbar.LENGTH_SHORT).show()
-                                }
-                                BluJhr.Connected.Disconnect -> {
-                                    Log.d("FirstFragment", "STATE: DISCONNECT")
-                                    Snackbar.make(requireView(), "Disconnect", Snackbar.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
-                    })
+                    val device = devicesBluetooth[position]
+                    connectToDevice(device)
                 }
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {}
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Do nothing
+            }
         }
+//        Log.d("FirstFragment", "STATE: CONNECTED")
+//        Snackbar.make(requireView(), "True", Snackbar.LENGTH_SHORT).show()
+//        Log.d("FirstFragment","Inicializando Bluetooth")
+//        Log.d("FirstFragment","Function StartDataReciving")
+//        Log.d("FirstFragment","STATE: PENDING")
+//        Snackbar.make(requireView(), "Pending", Snackbar.LENGTH_SHORT).show()
 
+//        Log.d("FirstFragment", "STATE: FALSE")
+//        Snackbar.make(requireView(), "False", Snackbar.LENGTH_SHORT).show()
+
+//        Log.d("FirstFragment", "STATE: DISCONNECT")
+//        Snackbar.make(requireView(), "Disconnect", Snackbar.LENGTH_SHORT).show()
         return binding.root
     }
 
@@ -145,59 +139,113 @@ class FirstFragment : Fragment() {
     }
 
     private fun searchAndDisplayBluetoothDevices() {
-        if (!bluetooth.stateBluetoooth()) {
+        // Verificar si el Bluetooth está habilitado
+        if (bluetoothAdapter == null || !bluetoothAdapter!!.isEnabled) {
+            // Solicitar al usuario que habilite el Bluetooth
             enableBluetoothLauncher.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
         } else {
-            devicesBluetooth = bluetooth.deviceBluetooth()
-            if (devicesBluetooth.isNotEmpty()) {
-                val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_expandable_list_item_1, devicesBluetooth)
+            // Obtener la lista de dispositivos Bluetooth emparejados
+            val pairedDevices: Set<BluetoothDevice> = bluetoothAdapter!!.bondedDevices
+            if (pairedDevices.isNotEmpty()) {
+                // Guardar la lista de dispositivos Bluetooth
+                devicesBluetooth = pairedDevices.toMutableList()
+
+                // Convertir la lista de dispositivos en una lista de nombres para mostrar
+                val deviceNames = devicesBluetooth.map { it.name }.toMutableList()
+
+                // Crear y establecer el adaptador para la lista de nombres de dispositivos
+                val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_expandable_list_item_1, deviceNames)
                 binding.listDeviceBluetooth.adapter = adapter
             } else {
+                // Mostrar mensaje si no hay dispositivos emparejados
                 Snackbar.make(requireView(), "No paired Bluetooth devices", Snackbar.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun initBluetooth() {
-        bluetoothManager = requireContext().getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        bluetoothAdapter = bluetoothManager.adapter
-        bluetoothDevice = bluetoothAdapter.getRemoteDevice("98:D3:36:81:02:77")
-
-        try {
-            val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-            Log.d("FirstFragment", "Creat a socket")
-            bluetoothSocket = bluetoothDevice.createRfcommSocketToServiceRecord(uuid)
-            Log.d("FirstFragment", "Try to connect")
-            bluetoothSocket.connect()
-        } catch (e: IOException) {
-            Log.e("FirstFragment", "Error connecting Bluetooth: $e")
-            Snackbar.make(requireView(), "Error al conectarse al dispositivo", Snackbar.LENGTH_SHORT).show()
-        } catch (e: Exception) {
-            Log.e("FirstFragment", "General error: $e")
-            Snackbar.make(requireView(), "Error desconocido.", Snackbar.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun startDataReceiving() {
-        val inputStream = bluetoothSocket.inputStream
-        val buffer = ByteArray(1024)
-        var bytes: Int
-
+    private fun connectToDevice(device: BluetoothDevice) {
         Thread {
-            while (true) {
-                try {
-                    Log.d("FirstFragment", "Try the receipt of data")
-                    bytes = inputStream.read(buffer)
-                    val data = String(buffer, 0, bytes)
-                    parseData(data)
-                    requireActivity().runOnUiThread { updateUI() }
-                } catch (e: IOException) {
-                    break
+            try {
+                val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+                bluetoothSocket = device.createRfcommSocketToServiceRecord(uuid)
+                bluetoothSocket?.connect()
+                isConnected = true
+                Log.d("FirstFragment", "STATE: CONNECTED")
+                requireActivity().runOnUiThread {
+                    Snackbar.make(requireView(), "CONNECTED", Snackbar.LENGTH_SHORT).show()
+                    initBluetooth()
+                    startDataReceiving()
+                }
+            } catch (e: IOException) {
+                Log.e("FirstFragment", "Error connecting to device", e)
+                isConnected = false
+                requireActivity().runOnUiThread {
+                    Snackbar.make(requireView(),"Failed to connect",Snackbar.LENGTH_SHORT).show()
                 }
             }
         }.start()
     }
+    private fun initBluetooth() {
+        bluetoothManager = requireContext().getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        bluetoothAdapter = bluetoothManager.adapter//inicializar adaptador
+        if (bluetoothAdapter == null || !bluetoothAdapter!!.isEnabled) {//comprobar que el adaptador no sea nulo
+            Log.e("FirstFragment", "Bluetooth not enabled or adapter is null")
+            requireActivity().runOnUiThread {
+                Snackbar.make(requireView(), "Bluetooth no está habilitado o no hay adaptador", Snackbar.LENGTH_SHORT).show()
+            }
+            return
+        }
+        bluetoothDevice = bluetoothAdapter!!.getRemoteDevice("98:D3:36:81:02:77")//inicializad dispositivo BT con el adaptador
 
+        try {
+            Log.d("FirstFragment", "Create a socket")
+            if (bluetoothSocket == null || !isConnected) {
+                val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+                bluetoothSocket = bluetoothDevice.createRfcommSocketToServiceRecord(uuid)
+                Log.d("FirstFragment", "Try to connect")
+                bluetoothSocket?.connect()
+                isConnected = true
+            }
+        } catch (e: IOException) {
+            Log.e("FirstFragment", "Error connecting Bluetooth: $e")
+            requireActivity().runOnUiThread {
+                Snackbar.make(requireView(), "Error al conectarse al dispositivo", Snackbar.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            Log.e("FirstFragment", "General error: $e")
+            requireActivity().runOnUiThread {
+                Snackbar.make(requireView(), "Error desconocido.", Snackbar.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun startDataReceiving() {
+        val socket = bluetoothSocket // Copiamos la referencia para evitar múltiples verificaciones de null
+        if (socket != null) {
+            val inputStream = socket.inputStream
+            val buffer = ByteArray(1024)
+            var bytes: Int
+
+            Thread {
+                while (true) {
+                    try {
+                        Log.d("FirstFragment", "Try the receipt of data")
+                        bytes = inputStream.read(buffer)
+                        val data = String(buffer, 0, bytes)
+                        Log.d("FirstFragment", "Try the parsing of data")
+                        parseData(data)
+                        requireActivity().runOnUiThread { updateUI() }
+                    } catch (e: IOException) {
+                        Log.e("FirstFragment","Error tying reception, Break thread: $e")
+                        break
+                    }
+                }
+            }.start()
+        } else {
+            Log.e("FirstFragment", "BluetoothSocket is null")
+            Snackbar.make(requireView(), "Error: BluetoothSocket is null", Snackbar.LENGTH_SHORT).show()
+        }
+    }
     private fun parseData(data: String) {
         Log.d("FirstFragment", "Parsing data")
         val parts = data.split("|")
@@ -212,7 +260,6 @@ class FirstFragment : Fragment() {
             }
         }
     }
-
     private fun updateUI() {
         Log.d("FirstFragment", "Updating the User Interface ")
         binding.valTemp.text = "$temperature °C"
@@ -220,19 +267,16 @@ class FirstFragment : Fragment() {
         binding.valMov.text = if (movement == 1) "Movimiento" else "Quieto"
         binding.valSonido.text = if (sound == 1) "Llanto" else "Silencio"
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
         try {
-            if (::bluetoothSocket.isInitialized) {
+            bluetoothSocket?.let {
                 Log.d("FirstFragment", "Closing socket")
-                // Tu código para manejar la desconexión o limpieza del socket
-                bluetoothSocket.close()
+                it.close()
             }
-        } catch (e: UninitializedPropertyAccessException) {
-            Log.e("FirstFragment", "bluetoothSocket no ha sido inicializado", e)
+        } catch (e: IOException) {
+            Log.e("FirstFragment", "Error cerrando el bluetoothSocket", e)
         }
-
     }
 }
