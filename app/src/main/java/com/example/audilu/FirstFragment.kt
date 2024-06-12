@@ -19,7 +19,6 @@ import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.audilu.bluetooth.bluetoothManager
 import com.example.audilu.databinding.FragmentFirstBinding
 import com.google.android.material.snackbar.Snackbar
 import com.ingenieriajhr.blujhr.BluJhr
@@ -27,8 +26,6 @@ import java.io.IOException
 import java.util.UUID
 
 class FirstFragment : Fragment() {
-    private lateinit var bluetooth: BluJhr
-//    private var devicesBluetooth = ArrayList<String>()
     private var _binding: FragmentFirstBinding? = null
     private val binding get() = _binding!!
     private val bluetoothPermissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -51,13 +48,10 @@ class FirstFragment : Fragment() {
     private var bluetoothSocket: BluetoothSocket? = null
     private lateinit var bluetoothManager: BluetoothManager
     private var isConnected: Boolean = false
-    private lateinit var devicesBluetooth: List<BluetoothDevice>
+    private lateinit var devicesBluetooth: MutableList<BluetoothDevice>
     private lateinit var bluetoothDevice: BluetoothDevice
-//    private lateinit var bluetoothAdapter: BluetoothAdapter
-//    private lateinit var bluetoothDevice: BluetoothDevice
-//    private lateinit var bluetoothSocket: BluetoothSocket
-    private var temperature = 0
-    private var humidity = 0
+    private var temperature  = 0f
+    private var humidity = 0f
     private var movement = 0
     private var sound = 0
 
@@ -66,8 +60,7 @@ class FirstFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
-        bluetooth = BluJhr(requireContext())
-
+        //bluetooth = BluJhr(requireContext())
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {//CONTROLA LA VERSION DE ANDROIRD
             Log.d("FirstFragment", "Requesting permissions for android 12+")
             requestBluetoothPermissions()// Solicitar permisos de Bluetooth para Android 12+
@@ -83,23 +76,10 @@ class FirstFragment : Fragment() {
                     connectToDevice(device)
                 }
             }
-
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // Do nothing
             }
         }
-//        Log.d("FirstFragment", "STATE: CONNECTED")
-//        Snackbar.make(requireView(), "True", Snackbar.LENGTH_SHORT).show()
-//        Log.d("FirstFragment","Inicializando Bluetooth")
-//        Log.d("FirstFragment","Function StartDataReciving")
-//        Log.d("FirstFragment","STATE: PENDING")
-//        Snackbar.make(requireView(), "Pending", Snackbar.LENGTH_SHORT).show()
-
-//        Log.d("FirstFragment", "STATE: FALSE")
-//        Snackbar.make(requireView(), "False", Snackbar.LENGTH_SHORT).show()
-
-//        Log.d("FirstFragment", "STATE: DISCONNECT")
-//        Snackbar.make(requireView(), "Disconnect", Snackbar.LENGTH_SHORT).show()
         return binding.root
     }
 
@@ -162,29 +142,36 @@ class FirstFragment : Fragment() {
             }
         }
     }
-//
+    //
     private fun connectToDevice(device: BluetoothDevice) {
         Thread {
             try {
                 val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-                bluetoothSocket = device.createRfcommSocketToServiceRecord(uuid)
-                bluetoothSocket?.connect()
-                isConnected = true
-                Log.d("FirstFragment", "STATE: CONNECTED")
+                Log.d("FirstFragment", "Creating a socket")
+                val socket = device.createRfcommSocketToServiceRecord(uuid)
+                bluetoothSocket = socket
+
+                Log.d("FirstFragment", "Trying to connect")
+                socket.connect()
+
                 requireActivity().runOnUiThread {
-                    Snackbar.make(requireView(), "CONNECTED", Snackbar.LENGTH_SHORT).show()
-                    initBluetooth()
+                    Snackbar.make(requireView(), "Connected to device", Snackbar.LENGTH_SHORT).show()
                     startDataReceiving()
                 }
             } catch (e: IOException) {
-                Log.e("FirstFragment", "Error connecting to device", e)
-                isConnected = false
+                Log.e("FirstFragment", "Error connecting to device: ${e.message}")
                 requireActivity().runOnUiThread {
-                    Snackbar.make(requireView(),"Failed to connect",Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(requireView(), "Error connecting to device", Snackbar.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Log.e("FirstFragment", "General error: ${e.message}")
+                requireActivity().runOnUiThread {
+                    Snackbar.make(requireView(), "Unknown error occurred", Snackbar.LENGTH_SHORT).show()
                 }
             }
         }.start()
     }
+
     private fun initBluetooth() {
         bluetoothManager = requireContext().getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothAdapter = bluetoothManager.adapter//inicializar adaptador
@@ -251,8 +238,8 @@ class FirstFragment : Fragment() {
         val parts = data.split("|")
         if (parts.size == 4) {
             try {
-                temperature = parts[0].toInt()
-                humidity = parts[1].toInt()
+                temperature = parts[0].toFloat()
+                humidity = parts[1].toFloat()
                 movement = parts[2].toInt()
                 sound = parts[3].toInt()
             } catch (e: NumberFormatException) {
@@ -264,8 +251,8 @@ class FirstFragment : Fragment() {
         Log.d("FirstFragment", "Updating the User Interface ")
         binding.valTemp.text = "$temperature °C"
         binding.valHum.text = "$humidity %"
-        binding.valMov.text = if (movement == 1) "Movimiento" else "Quieto"
-        binding.valSonido.text = if (sound == 1) "Llanto" else "Silencio"
+        binding.valMov.text = "$movement"
+        binding.valSonido.text = "$sound"
     }
     override fun onDestroyView() {
         super.onDestroyView()
