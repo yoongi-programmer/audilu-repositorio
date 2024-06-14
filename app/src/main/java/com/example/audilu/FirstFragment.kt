@@ -24,6 +24,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.ingenieriajhr.blujhr.BluJhr
 import java.io.IOException
 import java.util.UUID
+import android.os.VibrationEffect
+import android.os.Vibrator
 
 class FirstFragment : Fragment() {
     private var _binding: FragmentFirstBinding? = null
@@ -69,17 +71,22 @@ class FirstFragment : Fragment() {
             requestLegacyBluetoothPermissions()// Solicitar permisos de Bluetooth para Android 11 y anteriores
         }
 
-        binding.listDeviceBluetooth.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                if (devicesBluetooth.isNotEmpty()) {
-                    val device = devicesBluetooth[position]
-                    connectToDevice(device)
+            binding.listDeviceBluetooth.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                    if (devicesBluetooth.isNotEmpty()) {
+                        Log.d("FirstFragment", "Selected device: ${devicesBluetooth[position].name}")
+                        val device = devicesBluetooth[position]
+                        connectToDevice(device)
+                    }
+                }
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // Do nothing
                 }
             }
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Do nothing
+            binding.btnDisconnect.setOnClickListener {
+                disconnectBluetooth()
             }
-        }
+
         return binding.root
     }
 
@@ -156,6 +163,7 @@ class FirstFragment : Fragment() {
 
                 requireActivity().runOnUiThread {
                     Snackbar.make(requireView(), "Connected to device", Snackbar.LENGTH_SHORT).show()
+                    //initBluetooth()
                     startDataReceiving()
                 }
             } catch (e: IOException) {
@@ -198,6 +206,7 @@ class FirstFragment : Fragment() {
             requireActivity().runOnUiThread {
                 Snackbar.make(requireView(), "Error al conectarse al dispositivo", Snackbar.LENGTH_SHORT).show()
             }
+            isConnected = false
         } catch (e: Exception) {
             Log.e("FirstFragment", "General error: $e")
             requireActivity().runOnUiThread {
@@ -211,19 +220,33 @@ class FirstFragment : Fragment() {
         if (socket != null) {
             val inputStream = socket.inputStream
             val buffer = ByteArray(1024)
+            val stringBuilder = StringBuilder()
             var bytes: Int
 
             Thread {
                 while (true) {
                     try {
-                        Log.d("FirstFragment", "Try the receipt of data")
+                        Log.d("FirstFragment", "Trying to receive data")
                         bytes = inputStream.read(buffer)
                         val data = String(buffer, 0, bytes)
-                        Log.d("FirstFragment", "Try the parsing of data")
-                        parseData(data)
-                        requireActivity().runOnUiThread { updateUI() }
+                        stringBuilder.append(data)
+                        Log.d("FirstFragment", "Received data: $data")
+
+                        // Procesar líneas completas
+                        val lines = stringBuilder.split("\n")
+                        for (i in 0 until lines.size - 1) {
+                            val line = lines[i].trim()
+                            if (line.isNotEmpty()) {
+                                parseData(line)
+                                requireActivity().runOnUiThread { updateUI() }
+                            }
+                        }
+
+                        // Mantener la última parte de datos no procesada
+                        stringBuilder.clear()
+                        stringBuilder.append(lines.last())
                     } catch (e: IOException) {
-                        Log.e("FirstFragment","Error tying reception, Break thread: $e")
+                        Log.e("FirstFragment", "Error receiving data, breaking thread: $e")
                         break
                     }
                 }
@@ -233,26 +256,65 @@ class FirstFragment : Fragment() {
             Snackbar.make(requireView(), "Error: BluetoothSocket is null", Snackbar.LENGTH_SHORT).show()
         }
     }
+
     private fun parseData(data: String) {
         Log.d("FirstFragment", "Parsing data")
         val parts = data.split("|")
         if (parts.size == 4) {
             try {
+                // Parse the temperature and humidity as float values
                 temperature = parts[0].toFloat()
                 humidity = parts[1].toFloat()
                 movement = parts[2].toInt()
                 sound = parts[3].toInt()
             } catch (e: NumberFormatException) {
-                Log.e("FirstFragment", "Error parsing data: $e")
+                Log.e("FirstFragment", "Error parsing data: ${e.message}")
             }
+        } else {
+            Log.e("FirstFragment", "Data format error: expected 4 parts, got ${parts.size}")
         }
     }
     private fun updateUI() {
-        Log.d("FirstFragment", "Updating the User Interface ")
-        binding.valTemp.text = "$temperature °C"
-        binding.valHum.text = "$humidity %"
+        Log.d("FirstFragment", "Updating the User Interface with values - Temperature: $temperature, Humidity: $humidity, Movement: $movement, Sound: $sound")
+        binding.valTemp.text = String.format("%.1f °C", temperature)
+        binding.valHum.text = String.format("%.1f %%", humidity)
         binding.valMov.text = "$movement"
         binding.valSonido.text = "$sound"
+
+        if(sound==1){
+            vibrate()
+        }
+    }
+    //CODE function FOR VIBRATION
+    fun vibrate(duration: Long = 1500L) {
+        // Implementación de la función vibrate()
+        val vibrator = ContextCompat.getSystemService(requireContext(), Vibrator::class.java)
+
+        if (vibrator != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(duration, VibrationEffect.DEFAULT_AMPLITUDE))
+            } else {
+                @Suppress("DEPRECATION")
+                vibrator.vibrate(duration)
+            }
+        }
+    }
+    private fun disconnectBluetooth() {
+        try {
+            bluetoothSocket?.close()
+            bluetoothSocket = null
+            // Aquí restableces los valores a 0
+            updateUIWithDefaultValues()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+    private fun updateUIWithDefaultValues() {
+        // Suponiendo que tienes TextViews o variables para mostrar los valores
+        binding.valTemp.text="0.0"
+        binding.valHum.text ="0.0"
+        binding.valSonido.text= "0"
+        binding.valMov.text= "0"
     }
     override fun onDestroyView() {
         super.onDestroyView()
