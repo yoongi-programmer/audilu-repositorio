@@ -81,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-black"
-            android:text="Log In"
+            android:text="Bienvenido"
             android:textAlignment="center"
             android:textColor="#E1DD8888"
             android:textSize="24sp"
