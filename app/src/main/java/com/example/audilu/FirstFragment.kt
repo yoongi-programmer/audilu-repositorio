@@ -282,11 +282,14 @@ class FirstFragment : Fragment() {
         binding.valSonido.text = "$sound"
 
         if(sound==1){
-            vibrate()
+            vibrate(1500L)
+        }
+        if(sound==2){
+            vibrate(1000L)
         }
     }
     //CODE function FOR VIBRATION
-    fun vibrate(duration: Long = 1500L) {
+    fun vibrate(duration: Long = 1000L) {
         // Implementación de la función vibrate()
         val vibrator = ContextCompat.getSystemService(requireContext(), Vibrator::class.java)
 

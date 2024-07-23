@@ -16,6 +16,8 @@
     <!-- Permisos de Vibracion-->
     <uses-permission android:name="android.permission.VIBRATE"/>
     <!--Permisos de camara para flash-->
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
     <application
         android:allowBackup="true"
