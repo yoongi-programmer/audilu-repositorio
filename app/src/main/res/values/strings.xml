@@ -1,16 +1,24 @@
 <resources>
-    <string name="app_name">audilu</string>
-    <string name="mi_aplicaci_n">Mi Aplicación</string>
-    <string name="desconectar">Desconectar</string>
     <string name="audilu">Audilu</string>
+    <string name="desconectar">Desconectar</string>
     <string name="conectar">Conectar</string>
     <string name="buscar">Buscar</string>
     <string name="temp">Temperatura</string>
     <string name="hum">Humedad</string>
     <string name="sonido">Sonido</string>
     <string name="mov">Movimiento</string>
-    <string name="contentDescription">Logo</string>
+    <string name="gas">Gas</string>
     <string name="btnNav">Navegación</string>
 
-
+    <!--Contenido app -->
+    <string name="bienvenido">Bienvenido!</string>
+    <string name="pref_titulo">Preferencias de Alertas</string>
+    <string name="pref_text">Personaliza tus notificaciones para mejorar tu experiencia. </string>
+    <string name="op_vibrar">Vibraciones</string>
+    <string name="op_luz">Flash/Luz</string>
+    <string name="casos">Casos</string>
+    <string name="op_pref">Preferencias</string>
+    <string name="op_home">Home</string>
+    <string name="llanto">Llanto</string>
+    <string name="content_description">Logo de la app</string>
 </resources>
