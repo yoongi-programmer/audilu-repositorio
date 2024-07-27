@@ -23,6 +23,7 @@
     <string name="op_pref">Preferencias</string>
     <string name="op_home">Home</string>
     <string name="llanto">Llanto</string>
+    <string name="txtGas">Gas:</string>
     <string name="content_description">Logo de la app</string>
     <string name="icon_vib">Icono de vibracion</string>
     <string name="icon_luz">Icono de flash</string>
@@ -33,6 +34,7 @@
     <string name="img_temp">Imagen de temperatura</string>
     <string name="img_hum">Imagen de humedad</string>
     <string name="img_gas">Imagen de gas</string>
+    <string name="valGas">No detectado</string>
     <string name="seleccionar">Seleccionar</string>
     <string name="on">ON</string>
     <string name="off">OFF</string>
