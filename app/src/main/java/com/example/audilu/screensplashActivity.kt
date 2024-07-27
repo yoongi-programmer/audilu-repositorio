@@ -12,7 +12,7 @@ class screensplashActivity : AppCompatActivity() {
 
         // espera y navega usando Coroutine
         CoroutineScope(Dispatchers.Main).launch {
-            delay(1000) // Delay por 2seg
+            delay(800) // Delay por 2seg
             val intent = Intent(this@screensplashActivity, audiluActivity::class.java)
             startActivity(intent)
             finish() // cierra el splash screen activity
