@@ -4,10 +4,14 @@
     <color name="pink">#FFD4E1</color>
     <color name="pink_light">#FFEBEB</color>
     <color name="pink_strong">#F0A1A3</color>
-    <color name="green">#A5E3D9</color>
-    <color name="blue">#6DA9E4</color>
+    <color name="green_light">#A5E3D9</color>
     <color name="yellow">#FCB457</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="gray">#ECECEC</color>
+    <color name="gray_light">#ECECEC</color>
+    <color name="gray">#BAB6B6</color>
+    <color name="text_color">#415058</color>
+    <color name="active_text">#1684FC</color>
+    <color name="button_color_primary">#6DA9E4</color> <!-- Color para el primer botón -->
+    <color name="button_color_secondary">#FF5959</color> <!-- Color para el segundo botón -->
 </resources>
