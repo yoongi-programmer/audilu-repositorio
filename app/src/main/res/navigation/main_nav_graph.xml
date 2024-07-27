@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/mainFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -12,8 +12,8 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_firstFragment"
-            app:destination="@id/firstFragment"
-            app:enterAnim="@android:anim/slide_in_left" />
+            app:destination="@id/preferenciasFragment"
+            app:enterAnim="@anim/nav_default_enter_anim" />
     </fragment>
 
     <fragment
@@ -21,6 +21,25 @@
         android:name="com.example.audilu.FirstFragment"
         android:label="fragment_first"
         tools:layout="@layout/fragment_first" />
+    <fragment
+        android:id="@+id/preferenciasFragment"
+        android:name="com.example.audilu.preferenciasFragment"
+        android:label="fragment_preferencias"
+        tools:layout="@layout/fragment_preferencias" >
+        <action
+            android:id="@+id/action_preferenciasFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.audilu.homeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.audilu.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" />
 
 
 </navigation>

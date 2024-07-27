@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.audilu.databinding.FragmentPreferenciasBinding
 
 class preferenciasFragment : Fragment() {
@@ -22,6 +23,9 @@ class preferenciasFragment : Fragment() {
         _binding = FragmentPreferenciasBinding.inflate(inflater, container, false)
         val root = binding.root
 
+        binding.btAceptar.setOnClickListener{
+            findNavController().navigate(R.id.action_preferenciasFragment_to_homeFragment)
+        }
         return root
     }
 }
