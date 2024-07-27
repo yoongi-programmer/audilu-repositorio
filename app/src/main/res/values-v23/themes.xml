@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.Audilu" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <!-- Secondary brand color. -->
-        <item name="colorOnSecondary">@color/black</item>
+        <!-- Primary color -->
+        <item name="colorPrimary">@color/button_color_primary</item>
+        <item name="colorPrimaryVariant">@color/button_color_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Secondary color -->
+        <item name="colorSecondary">@color/button_color_secondary</item>
+        <item name="colorSecondaryVariant">@color/button_color_secondary</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- Background and surface colors -->
+
+        <!-- Error colors -->
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/pink_light</item>
         <!-- Customize your theme here. -->
