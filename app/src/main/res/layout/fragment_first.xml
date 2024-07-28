@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".FirstFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,21 +44,8 @@
             app:layout_constraintStart_toEndOf="@id/imgViewLogoAudilu"
             app:layout_constraintTop_toTopOf="@id/viewHeader" />
 
-        <Button
-            android:id="@+id/btn_Disconnect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#673AB7"
-            android:fontFamily="sans-serif"
-            android:text="@string/desconectar"
-            android:textColor="#DEDEDF"
-            android:typeface="normal"
-            app:iconTint="#FEFEFE"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="563dp" />
-
         <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:orientation="vertical"
@@ -102,8 +89,7 @@
                     android:backgroundTint="#673AB7"
                     android:fontFamily="sans-serif"
                     android:text="@string/buscar"
-                    android:textColor="@color/white"
-                    app:iconTint="@color/pink_strong" />
+                    android:textColor="@color/white" />
             </LinearLayout>
 
             <Spinner
@@ -222,6 +208,17 @@
                     android:textAlignment="center"
                     android:textSize="20sp" />
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_Disconnect"
+                android:layout_width="155dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#673AB7"
+                android:fontFamily="sans-serif"
+                android:text="@string/desconectar"
+                android:textColor="#DEDEDF"
+                android:typeface="normal"
+                app:iconTint="#FEFEFE" />
 
         </LinearLayout>
 
