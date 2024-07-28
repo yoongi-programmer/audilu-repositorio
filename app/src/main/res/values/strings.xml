@@ -1,0 +1,51 @@
+<resources>
+    <string name="audilu">Audilu</string>
+    <string name="desconectar">Desconectar</string>
+    <string name="conectar">Conectar</string>
+    <string name="buscar">Buscar</string>
+    <string name="temp">Temperatura</string>
+    <string name="hum">Humedad</string>
+    <string name="sonido">Sonido</string>
+    <string name="mov">Movimiento</string>
+    <string name="gas">Gas</string>
+    <string name="sonido_l">Sonido</string>
+    <string name="mov_l">Movimiento</string>
+    <string name="gas_l">Gas</string>
+    <string name="btnNav">Navegación</string>
+
+    <!--Contenido app -->
+    <string name="bienvenido">Bienvenido!</string>
+    <string name="pref_titulo">Preferencias de Alertas</string>
+    <string name="pref_text">Personaliza tus notificaciones para mejorar tu experiencia. </string>
+    <string name="op_vibrar">Vibraciones</string>
+    <string name="op_luz">Flash/Luz</string>
+    <string name="casos">Casos:</string>
+    <string name="op_pref">Preferencias</string>
+    <string name="op_home">Home</string>
+    <string name="llanto">Llanto</string>
+    <string name="txtGas">Gas:</string>
+    <string name="content_description">Logo de la app</string>
+    <string name="icon_vib">Icono de vibracion</string>
+    <string name="icon_luz">Icono de flash</string>
+    <string name="img_happybb">Imagen bebé feliz</string>
+    <string name="img_crybb">Imagen bebé llorando</string>
+    <string name="img_movbb">Imagen bebé gateando</string>
+    <string name="img_sleepbb">Imagen bebé durmiendo</string>
+    <string name="img_temp">Imagen de temperatura</string>
+    <string name="img_hum">Imagen de humedad</string>
+    <string name="img_gas">Imagen de gas</string>
+    <string name="valGas">No detectado</string>
+    <string name="seleccionar">Seleccionar</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
+    <string name="aceptar">Aceptar cambios</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="swt_Vib">Switch para vibracion</string>
+    <string name="swt_Luz">Switch para Luz/Flash</string>
+    <string name="check_sonV">Opción de sonido, distintiva para Vibracion</string>
+    <string name="check_sonL">Opción de sonido, distintiva para Luz/Flash</string>
+    <string name="check_movV">Opción de movimiento, distintiva para Vibracion</string>
+    <string name="check_movL">Opción de movimiento, distintiva para Luz/Flash</string>
+    <string name="check_gasV">Opción de gas, distintiva para Vibracion</string>
+    <string name="check_gasL">Opción de gas, distintiva para Luz/Flash</string>
+</resources>
