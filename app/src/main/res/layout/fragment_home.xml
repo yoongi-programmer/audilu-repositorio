@@ -31,8 +31,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="110dp">
 
+
                     <LinearLayout
-                        android:id="@+id/btn_group"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -81,9 +81,9 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.511"
-                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.4">
+                        app:layout_constraintVertical_bias="0.4"
+                        app:layout_constraintStart_toStartOf="parent">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/container_son"
@@ -184,6 +184,7 @@
                                 app:layout_constraintVertical_bias="0.107" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/container_temp"
                             android:layout_width="195dp"
@@ -197,15 +198,15 @@
 
                             <View
                                 android:id="@+id/cont_temp"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_width="195dp"
+                                android:layout_height="210dp"
                                 android:background="@drawable/data_grid"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintHorizontal_bias="0.0"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_bias="0.0" />
+                                app:layout_constraintVertical_bias="0.619"/>
 
                             <ImageView
                                 android:id="@+id/img_temp"
@@ -248,6 +249,7 @@
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:layout_constraintVertical_bias="0.698" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/container_hum"
@@ -313,6 +315,7 @@
                                 app:layout_constraintVertical_bias="0.698" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/container_gas"
                             android:layout_width="match_parent"
@@ -334,7 +337,8 @@
                                 app:layout_constraintHorizontal_bias="0.0"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_bias="1.0" />
+                                app:layout_constraintVertical_bias="1.0"
+                                tools:layout_editor_absoluteX="0dp"/>
 
                             <ImageView
                                 android:id="@+id/img_gas"
@@ -396,6 +400,5 @@
 
             </LinearLayout>
         </ScrollView>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
