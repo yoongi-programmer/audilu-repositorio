@@ -20,7 +20,84 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/container_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="95dp">
 
+                    <View
+                        android:id="@+id/header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="95dp"
+                        android:background="@color/pink_light"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:layout_editor_absoluteX="0dp"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/name_app"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/audilu"
+                        android:textColor="@color/black"
+                        android:textSize="28sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.583"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.28" />
+
+                    <ImageView
+                        android:id="@+id/logo"
+                        android:layout_width="65dp"
+                        android:layout_height="60dp"
+                        android:contentDescription="@string/content_description"
+                        android:src="@drawable/logoaudilucircularsinfondo"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.390"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.141" />
+
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tablayout"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/header"
+                        app:layout_constraintHorizontal_bias="0.179"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="1.0"
+                        app:tabGravity="start"
+                        app:tabIndicatorColor="@color/active_text"
+                        app:tabIndicatorFullWidth="false"
+                        app:tabMode="fixed"
+                        app:tabSelectedTextColor="@color/active_text"
+                        app:tabTextAppearance="@style/TextAppearance.AppCompat.Medium"
+                        app:tabTextColor="@color/text_color"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:background="@color/pink_light"
+                        tools:layout_editor_absoluteX="16dp"
+                        tools:layout_editor_absoluteY="60dp">
+
+                        <com.google.android.material.tabs.TabItem
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/op_pref" />
+
+                        <com.google.android.material.tabs.TabItem
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/op_home" />
+
+                    </com.google.android.material.tabs.TabLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/container_text"
                     android:layout_width="match_parent"
@@ -109,24 +186,28 @@
                             app:layout_constraintVertical_bias="0.047" />
 
 
-                        <Switch
+                        <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/switchVib"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:checked="false"
+                            android:checked="true"
                             android:contentDescription="@string/swt_Vib"
                             android:enabled="true"
-                            android:scaleX="2"
-                            android:scaleY="2"
                             android:thumb="@drawable/ic_thumb"
-                            android:track="@drawable/bg_track"
+                            app:showText="true"
+                            android:textOff="@string/off"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textOn="@string/on"
+                            app:track="@drawable/bg_track"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.443"
+                            app:layout_constraintHorizontal_bias="0.462"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.132" />
+                            app:layout_constraintVertical_bias="0.113"
+                            />
 
                         <TextView
                             android:id="@+id/text_casos"
@@ -155,26 +236,34 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintVertical_bias="0.245">
 
-                            <CheckBox
+                            <androidx.appcompat.widget.AppCompatCheckBox
                                 android:id="@+id/cb_sonido"
                                 android:layout_width="118dp"
                                 android:layout_height="wrap_content"
+                                android:button="@drawable/custom_checkbox"
+                                android:checked="true"
+                                android:paddingLeft="8dp"
                                 android:contentDescription="@string/check_sonV"
                                 android:text="@string/sonido"
+                                android:textSize="15sp"
                                 android:textColor="@color/black" />
 
-                            <CheckBox
+                            <androidx.appcompat.widget.AppCompatCheckBox
                                 android:id="@+id/cb_mov"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:button="@drawable/custom_checkbox"
+                                android:paddingLeft="8dp"
                                 android:contentDescription="@string/check_movV"
                                 android:text="@string/mov"
                                 android:textColor="@color/black" />
 
-                            <CheckBox
+                            <androidx.appcompat.widget.AppCompatCheckBox
                                 android:id="@+id/cb_gas"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:button="@drawable/custom_checkbox"
+                                android:paddingLeft="8dp"
                                 android:contentDescription="@string/check_gasV"
                                 android:text="@string/gas"
                                 android:textColor="@color/black" />
@@ -223,24 +312,27 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintVertical_bias="0.515" />
 
-                        <Switch
+                        <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/switchLuz"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:checked="false"
-                            android:enabled="true"
-                            android:scaleX="2"
-                            android:scaleY="2"
-                            android:thumb="@drawable/ic_thumb"
-                            android:track="@drawable/bg_track"
+                            android:checked="true"
                             android:contentDescription="@string/swt_Luz"
+                            android:enabled="true"
+                            android:thumb="@drawable/ic_thumb"
+                            android:textOff="@string/off"
+                            android:textOn="@string/on"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.443"
+                            app:layout_constraintHorizontal_bias="0.462"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.59" />
+                            app:layout_constraintVertical_bias="0.583"
+                            app:showText="true"
+                            app:track="@drawable/bg_track" />
 
                         <TextView
                             android:id="@+id/casosLuz"
@@ -269,26 +361,33 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintVertical_bias="0.825">
 
-                            <CheckBox
+                            <androidx.appcompat.widget.AppCompatCheckBox
                                 android:id="@+id/cbx_sonidoL"
                                 android:layout_width="118dp"
                                 android:layout_height="wrap_content"
+                                android:button="@drawable/custom_checkbox"
+                                android:checked="true"
+                                android:paddingLeft="8dp"
                                 android:contentDescription="@string/check_sonL"
                                 android:text="@string/sonido"
                                 android:textColor="@color/black" />
 
-                            <CheckBox
+                            <androidx.appcompat.widget.AppCompatCheckBox
                                 android:id="@+id/cbx_movL"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:button="@drawable/custom_checkbox"
+                                android:paddingLeft="8dp"
                                 android:contentDescription="@string/check_movL"
                                 android:text="@string/mov"
                                 android:textColor="@color/black" />
 
-                            <CheckBox
+                            <androidx.appcompat.widget.AppCompatCheckBox
                                 android:id="@+id/cbx_gasL"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:button="@drawable/custom_checkbox"
+                                android:paddingLeft="8dp"
                                 android:contentDescription="@string/check_gasL"
                                 android:text="@string/gas"
                                 android:textColor="@color/black" />
@@ -325,15 +424,8 @@
                             app:layout_constraintVertical_bias="0.96" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
         </ScrollView>
-
-
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 </FrameLayout>
