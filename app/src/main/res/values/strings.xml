@@ -48,4 +48,5 @@
     <string name="check_movL">Opción de movimiento, distintiva para Luz/Flash</string>
     <string name="check_gasV">Opción de gas, distintiva para Vibracion</string>
     <string name="check_gasL">Opción de gas, distintiva para Luz/Flash</string>
+    <string name="txt_novisible">Mensaje de alerta</string>
 </resources>
