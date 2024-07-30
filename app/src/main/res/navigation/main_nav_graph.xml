@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/mainFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -34,12 +34,11 @@
         android:id="@+id/homeFragment"
         android:name="com.example.audilu.homeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
-    <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.example.audilu.MainFragment"
-        android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_preferenciasFragment"
+            app:destination="@id/preferenciasFragment" />
+    </fragment>
 
 
 </navigation>

@@ -5,36 +5,37 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.audilu.databinding.FragmentMainBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class MainFragment : Fragment() {
-    private var _binding: FragmentMainBinding? = null
-    private val binding get() = _binding!!
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        // Inflate the layout for this fragment
-        _binding = FragmentMainBinding.inflate(inflater, container, false)
-        val root = binding.root
+abstract class BaseTabFragment : Fragment() {
+    protected fun setupTabLayout(tabLayout: TabLayout) {
+        val currentFragmentId = findNavController().currentDestination?.id
+        if (currentFragmentId == R.id.homeFragment) {
+            tabLayout.getTabAt(1)?.select() // Selecciona la pestaña de Home
+        } else if (currentFragmentId == R.id.preferenciasFragment) {
+            tabLayout.getTabAt(0)?.select() // Selecciona la pestaña de Preferencias
+        }
 
-        var viewPager : ViewPager2 = binding.viewPager
-        var tablayout : TabLayout = binding.tablayout
+        // Configurar el listener de clics en las pestañas
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                when (tab.position) {
+                    0 -> navigateToFragment(R.id.preferenciasFragment)
 
-        viewPager.adapter = FragmentAdapter(this)
-        TabLayoutMediator(tablayout,viewPager) { tab, position ->
-            when(position) {
-                0 -> tab.text = "Preferencias"
-                1 -> tab.text = "Home"
+                    1 -> navigateToFragment(R.id.homeFragment)
+                }
             }
-        }.attach()
-        return root
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
     }
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+
+    private fun navigateToFragment(fragmentId: Int) {
+        findNavController().navigate(fragmentId)
     }
 }
