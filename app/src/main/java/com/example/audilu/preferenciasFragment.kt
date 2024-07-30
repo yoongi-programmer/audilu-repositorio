@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.audilu.databinding.FragmentPreferenciasBinding
 import com.google.android.material.snackbar.Snackbar
 
-class preferenciasFragment : Fragment() {
+class preferenciasFragment : BaseTabFragment() {
     //inicializacion de vinculacion de vistas (binding)
     private var _binding: FragmentPreferenciasBinding? = null
     private val binding get() = _binding!!
@@ -26,6 +26,10 @@ class preferenciasFragment : Fragment() {
         Log.d("preferenciasFragment","Inflando layout para este fragmento")
         _binding = FragmentPreferenciasBinding.inflate(inflater, container, false)
         val root = binding.root
+
+        //funcion para la navegacion con tablayout
+        setupTabLayout(binding.tablayout)
+
         //Declaracion de variables
         val switchVib = binding.switchVib
         val switchLuz = binding.switchLuz
@@ -83,7 +87,7 @@ class preferenciasFragment : Fragment() {
         }else if (cbGasL.isChecked){
             Snackbar.make(root,"Opcion de Gas activada para FLASH",Snackbar.LENGTH_SHORT).show()
         }
-        return root
+        return binding.root
     }
 
     override fun onDestroyView() {
