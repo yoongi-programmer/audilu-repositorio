@@ -27,9 +27,86 @@
                 android:orientation="vertical" >
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/container_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="95dp">
+                    <View
+                        android:id="@+id/header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="95dp"
+                        android:background="@color/pink_light"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:layout_editor_absoluteX="0dp"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/name_app"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/audilu"
+                        android:textColor="@color/black"
+                        android:textSize="28sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.583"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.28" />
+
+                    <ImageView
+                        android:id="@+id/logo"
+                        android:layout_width="65dp"
+                        android:layout_height="60dp"
+                        android:contentDescription="@string/content_description"
+                        android:src="@drawable/logoaudilucircularsinfondo"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.390"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.141" />
+
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tablayout"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/header"
+                        app:layout_constraintHorizontal_bias="0.179"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="1.0"
+                        app:tabGravity="start"
+                        app:tabIndicatorColor="@color/active_text"
+                        app:tabIndicatorFullWidth="false"
+                        app:tabMode="fixed"
+                        app:tabSelectedTextColor="@color/active_text"
+                        app:tabTextAppearance="@style/TextAppearance.AppCompat.Medium"
+                        app:tabTextColor="@color/text_color"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:background="@color/pink_light"
+                        tools:layout_editor_absoluteX="16dp"
+                        tools:layout_editor_absoluteY="60dp">
+
+                        <com.google.android.material.tabs.TabItem
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/op_pref" />
+
+                        <com.google.android.material.tabs.TabItem
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/op_home" />
+
+                    </com.google.android.material.tabs.TabLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/container_bt"
                     android:layout_width="match_parent"
-                    android:layout_height="110dp">
+                    android:layout_height="100dp">
 
 
                     <LinearLayout
@@ -47,7 +124,7 @@
                             android:layout_width="170dp"
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="10dp"
-                            android:layout_marginEnd="15dp"
+                            android:layout_marginEnd="55dp"
                             android:background="@drawable/button_shape"
                             android:text="@string/conectar"
                             android:textColor="@color/white"
@@ -72,254 +149,264 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/container_grid"
                     android:layout_width="match_parent"
-                    android:layout_height="720dp">
+                    android:layout_height="750dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/container_grid2"
-                        android:layout_width="405dp"
-                        android:layout_height="600dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="650dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.511"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.4"
-                        app:layout_constraintStart_toStartOf="parent">
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/container_son"
-                            android:layout_width="195dp"
-                            android:layout_height="210dp"
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cont_sound"
+                            android:layout_width="210dp"
+                            android:layout_height="220dp"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="31dp"
+                            app:cardElevation="8dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintHorizontal_bias="0.085"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.03">
+                            app:layout_constraintVertical_bias="0.023">
 
-                            <View
-                                android:id="@+id/cont_sound"
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/container_son"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@drawable/data_grid"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintTop_toTopOf="parent">
 
-                            <ImageView
-                                android:id="@+id/img_bb_son"
-                                android:layout_width="118dp"
-                                android:layout_height="131dp"
-                                android:contentDescription="@string/img_happybb"
-                                android:src="@drawable/happybaby"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.492"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_bias="0.855" />
+                                <ImageView
+                                    android:id="@+id/img_bb_son"
+                                    android:layout_width="118dp"
+                                    android:layout_height="131dp"
+                                    android:contentDescription="@string/img_happybb"
+                                    android:src="@drawable/happybaby"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.492"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.855" />
 
-                            <TextView
-                                android:id="@+id/txtSon"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppinsmedium"
-                                android:text="@string/sonido"
-                                android:textColor="@color/black"
-                                android:textSize="25sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_bias="0.101" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
+                                <TextView
+                                    android:id="@+id/txtSon"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppinsmedium"
+                                    android:text="@string/sonido"
+                                    android:textColor="@color/black"
+                                    android:textSize="25sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.101" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/container_mov"
-                            android:layout_width="195dp"
-                            android:layout_height="210dp"
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cont_mov"
+                            android:layout_width="210dp"
+                            android:layout_height="220dp"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="31dp"
+                            app:cardElevation="8dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="1.0"
+                            app:layout_constraintHorizontal_bias="0.90"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.03">
+                            app:layout_constraintVertical_bias="0.023">
 
-                            <View
-                                android:id="@+id/cont_mov"
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/container_mov"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@drawable/data_grid"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintTop_toTopOf="parent">
 
-                            <ImageView
-                                android:id="@+id/img_bb_mov"
-                                android:layout_width="118dp"
-                                android:layout_height="131dp"
-                                android:contentDescription="@string/img_sleepbb"
-                                android:src="@drawable/sleepbaby"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.492"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_bias="0.855" />
+                                <ImageView
+                                    android:id="@+id/img_bb_mov"
+                                    android:layout_width="118dp"
+                                    android:layout_height="131dp"
+                                    android:contentDescription="@string/img_sleepbb"
+                                    android:src="@drawable/sleepbaby"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.492"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.855" />
 
-                            <TextView
-                                android:id="@+id/txtMov"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppinsmedium"
-                                android:text="@string/mov"
-                                android:textColor="@color/black"
-                                android:textSize="25sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.555"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_bias="0.107" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
+                                <TextView
+                                    android:id="@+id/txtMov"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppinsmedium"
+                                    android:text="@string/mov"
+                                    android:textColor="@color/black"
+                                    android:textSize="25sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.555"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.107" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
 
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/container_temp"
-                            android:layout_width="195dp"
-                            android:layout_height="210dp"
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cont_temp"
+                            android:layout_width="210dp"
+                            android:layout_height="220dp"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="31dp"
+                            app:cardElevation="8dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintHorizontal_bias="0.085"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.619">
+                            app:layout_constraintVertical_bias="0.64">
 
-                            <View
-                                android:id="@+id/cont_temp"
-                                android:layout_width="195dp"
-                                android:layout_height="210dp"
-                                android:background="@drawable/data_grid"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.0"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_bias="0.619"/>
-
-                            <ImageView
-                                android:id="@+id/img_temp"
-                                android:layout_width="103dp"
-                                android:layout_height="114dp"
-                                android:contentDescription="@string/img_temp"
-                                android:src="@drawable/temperatura"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.956"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_bias="0.718" />
-
-                            <TextView
-                                android:id="@+id/txtTemp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppinsmedium"
-                                android:text="@string/temp"
-                                android:textColor="@color/black"
-                                android:textSize="25sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_bias="0.101" />
-
-                            <TextView
-                                android:id="@+id/temp_val"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="24°"
-                                android:textColor="@color/text_color"
-                                android:textSize="48sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.13"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_bias="0.698" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/container_hum"
-                            android:layout_width="195dp"
-                            android:layout_height="210dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="1.0"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.619">
-
-                            <View
-                                android:id="@+id/cont_hum"
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/container_temp"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@drawable/data_grid"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintTop_toTopOf="parent">
 
-                            <ImageView
-                                android:id="@+id/img_hum"
-                                android:layout_width="103dp"
-                                android:layout_height="114dp"
-                                android:contentDescription="@string/img_hum"
-                                android:src="@drawable/humedad"
+                                <ImageView
+                                    android:id="@+id/img_temp"
+                                    android:layout_width="90dp"
+                                    android:layout_height="101dp"
+                                    android:contentDescription="@string/img_temp"
+                                    android:src="@drawable/temperatura"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.956"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.718" />
+
+                                <TextView
+                                    android:id="@+id/txtTemp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppinsmedium"
+                                    android:text="@string/temp"
+                                    android:textColor="@color/black"
+                                    android:textSize="25sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.101" />
+
+                                <TextView
+                                    android:id="@+id/temp_val"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="24°"
+                                    android:textColor="@color/text_color"
+                                    android:textSize="48sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.13"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.698" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cont_hum"
+                            android:layout_width="210dp"
+                            android:layout_height="220dp"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="31dp"
+                            app:cardElevation="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.90"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.64">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/container_hum"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.945"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_bias="0.71" />
+                                app:layout_constraintTop_toTopOf="parent">
 
-                            <TextView
-                                android:id="@+id/txtHum"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppinsmedium"
-                                android:text="@string/hum"
-                                android:textColor="@color/black"
-                                android:textSize="25sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.491"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_bias="0.101" />
+                                <ImageView
+                                    android:id="@+id/img_hum"
+                                    android:layout_width="96dp"
+                                    android:layout_height="103dp"
+                                    android:contentDescription="@string/img_hum"
+                                    android:src="@drawable/humedad"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.945"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.71" />
 
-                            <TextView
-                                android:id="@+id/hum_val"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="71"
-                                android:textColor="@color/text_color"
-                                android:textSize="48sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.234"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_bias="0.698" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
+                                <TextView
+                                    android:id="@+id/txtHum"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppinsmedium"
+                                    android:text="@string/hum"
+                                    android:textColor="@color/black"
+                                    android:textSize="25sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.491"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.101" />
 
+                                <TextView
+                                    android:id="@+id/hum_val"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="71"
+                                    android:textColor="@color/text_color"
+                                    android:textSize="48sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.12"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.698" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/container_gas"
-                            android:layout_width="match_parent"
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cont_gas"
+                            android:layout_width="438dp"
                             android:layout_height="95dp"
+                            app:cardBackgroundColor="@color/gray_light"
+                            app:cardCornerRadius="31dp"
+                            app:cardElevation="8dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -327,74 +414,88 @@
                             app:layout_constraintVertical_bias="0.972"
                             tools:layout_editor_absoluteX="0dp">
 
-                            <View
-                                android:id="@+id/cont_gas"
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/container_gas"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@drawable/cont_gas"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.0"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_bias="1.0"
-                                tools:layout_editor_absoluteX="0dp"/>
+                                app:layout_constraintVertical_bias="0.972"
+                                tools:layout_editor_absoluteX="0dp">
 
-                            <ImageView
-                                android:id="@+id/img_gas"
-                                android:layout_width="101dp"
-                                android:layout_height="101dp"
-                                android:contentDescription="@string/img_gas"
-                                android:src="@drawable/gas"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="1"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                <ImageView
+                                    android:id="@+id/img_gas"
+                                    android:layout_width="101dp"
+                                    android:layout_height="101dp"
+                                    android:contentDescription="@string/img_gas"
+                                    android:src="@drawable/gas"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="1"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
 
-                            <TextView
-                                android:id="@+id/txtGas"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppinsmedium"
-                                android:text="@string/txtGas"
-                                android:textColor="@color/black"
-                                android:textSize="25sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.116"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_bias="0.488" />
+                                <TextView
+                                    android:id="@+id/txtGas"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppinsmedium"
+                                    android:text="@string/txtGas"
+                                    android:textColor="@color/black"
+                                    android:textSize="25sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.116"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.488" />
 
-                            <TextView
-                                android:id="@+id/gas_val"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/valGas"
-                                android:textColor="@color/text_color"
-                                android:textSize="24sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.431"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_bias="0.45" />
+                                <TextView
+                                    android:id="@+id/gas_val"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/valGas"
+                                    android:textColor="@color/text_color"
+                                    android:textSize="24sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.431"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.45" />
 
-                        </androidx.constraintlayout.widget.ConstraintLayout>
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <TextView
+                            android:id="@+id/msj_alerta"
+                            android:layout_width="300dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/txt_novisible"
+                            android:textSize="24sp"
+                            android:visibility="invisible"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.501"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.381" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <Spinner
                         android:id="@+id/spinnerBT"
-                        android:layout_width="446dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="350dp"
+                        android:layout_height="50dp"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintHorizontal_bias="0.333"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.022" />
+                        app:layout_constraintVertical_bias="0.0" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
