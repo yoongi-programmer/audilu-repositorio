@@ -49,6 +49,8 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation ("androidx.cardview:cardview:1.0.0")
     implementation ("androidx.viewpager2:viewpager2:1.1.0")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
 //API splashscreen
     implementation ("androidx.core:core-splashscreen:1.0.1")
     testImplementation("junit:junit:4.13.2")
