@@ -1,5 +1,6 @@
 package com.example.audilu
 
+import PreferencesViewModel
 import android.R
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
@@ -9,8 +10,11 @@ import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.hardware.camera2.CameraManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
@@ -25,6 +29,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.audilu.databinding.FragmentHomeBinding
 import com.google.android.material.snackbar.Snackbar
@@ -36,6 +41,7 @@ class homeFragment : BaseTabFragment() {
     //inicializacion de vinculacion de vistas (binding)
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: PreferencesViewModel by activityViewModels()
     //variables de bluetooth
     private val bluetoothPermissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         if (permissions.all { it.value }) {
@@ -65,6 +71,9 @@ class homeFragment : BaseTabFragment() {
     private var movement = 0
     private var sound = 0
     private var gas = 0
+    //variables de flash
+    private lateinit var cameraM: CameraManager
+    var isFlash = false
     @RequiresApi(Build.VERSION_CODES.M)
 
     override fun onCreateView(
@@ -75,6 +84,8 @@ class homeFragment : BaseTabFragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         //funcion para la navegacion con tablayout
         setupTabLayout(binding.tablayout)
+        getPreferences()
+        cameraM = requireContext().getSystemService(Context.CAMERA_SERVICE) as CameraManager
 
         //SOLICITAR PERMISOS PARA UTILIZAR BLUETOOTH--------------------------------------
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {//Revisa version de android y solicita permisos de forma acorde
@@ -91,13 +102,13 @@ class homeFragment : BaseTabFragment() {
         binding.spinnerBT.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 if (devicesBluetooth.isNotEmpty()) {
-                    Log.d("FirstFragment", "Selected device: ${devicesBluetooth[position].name}")
+                    Log.d("homeFragment", "Selected device: ${devicesBluetooth[position].name}")
                     val device = devicesBluetooth[position]
                     connectToDevice(device)
                 }
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
-                // Do nothing
+                Snackbar.make(requireView(), "Seleccione un dispositivo", Snackbar.LENGTH_SHORT).show()
             }
         }
 
@@ -110,6 +121,27 @@ class homeFragment : BaseTabFragment() {
     }
 
     //FUNCIONES-------------------------------------------------------------------
+    private fun getPreferences() {
+        Log.d("homeFragment", "Getting preferences. switchVibState: ${viewModel.switchVibState.value}")
+        val switchVibState = viewModel.switchVibState.value ?: 0
+        Log.d("homeFragment", "Getting preferences. switchFlashState: ${viewModel.switchFlashState.value}")
+        val switchFlashState = viewModel.switchFlashState.value ?: 0
+        Log.d("homeFragment", "Getting preferences. cbVibSonState: ${viewModel.cbVibSonState.value}")
+        val cbVibSonState = viewModel.cbVibSonState.value ?: 0
+        Log.d("homeFragment", "Getting preferences. cbVibMovState: ${viewModel.cbVibMovState.value}")
+        val cbVibMovState = viewModel.cbVibMovState.value ?: 0
+        Log.d("homeFragment", "Getting preferences. cbVibGasState: ${viewModel.cbVibGasState.value}")
+        val cbVibGasState = viewModel.cbVibGasState.value ?: 0
+        Log.d("homeFragment", "Getting preferences. cbLuzSonState: ${viewModel.cbLuzSonState.value}")
+        val cbLuzSonState = viewModel.cbLuzSonState.value ?: 0
+        Log.d("homeFragment", "Getting preferences. cbLuzMovState: ${viewModel.cbLuzMovState.value}")
+        val cbLuzMovState = viewModel.cbLuzMovState.value ?: 0
+        Log.d("homeFragment", "Getting preferences. cbLuzGasState: ${viewModel.cbLuzGasState.value}")
+        val cbLuzGasState = viewModel.cbLuzGasState.value ?: 0
+
+        // Usa estos valores para realizar las acciones necesarias
+        updateUI(switchVibState, switchFlashState, cbVibSonState, cbVibMovState, cbVibGasState, cbLuzSonState, cbLuzMovState, cbLuzGasState)
+    }
 
     private fun requestLegacyBluetoothPermissions() {//Funcion para solicita permisos bt a android 11 e inferiores
         val requiredPermissions = arrayOf(
@@ -182,57 +214,23 @@ class homeFragment : BaseTabFragment() {
                 socket.connect()
 
                 requireActivity().runOnUiThread {
-                    Snackbar.make(requireView(), "Connected to device", Snackbar.LENGTH_SHORT).show()
+                    Log.d("homeFragment", "Connected to device")
+                    Snackbar.make(requireView(), "Se conectó al dispositivo correctamente", Snackbar.LENGTH_SHORT).show()
                     //initBluetooth()
                     startDataReceiving()
                 }
             } catch (e: IOException) {
                 Log.e("homeFragment", "Error connecting to device: ${e.message}")
                 requireActivity().runOnUiThread {
-                    Snackbar.make(requireView(), "Error connecting to device", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(requireView(), "Error al conectar al dispositivo", Snackbar.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 Log.e("homeFragment", "General error: ${e.message}")
                 requireActivity().runOnUiThread {
-                    Snackbar.make(requireView(), "Unknown error occurred", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(requireView(), "Error desconocido", Snackbar.LENGTH_SHORT).show()
                 }
             }
         }.start()
-    }
-
-    private fun initBluetooth() {
-        bluetoothManager = requireContext().getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        bluetoothAdapter = bluetoothManager.adapter//inicializar adaptador
-        if (bluetoothAdapter == null || !bluetoothAdapter!!.isEnabled) {//comprobar que el adaptador no sea nulo
-            Log.e("homeFragment", "Bluetooth not enabled or adapter is null")
-            requireActivity().runOnUiThread {
-                Snackbar.make(requireView(), "Bluetooth no está habilitado o no hay adaptador", Snackbar.LENGTH_SHORT).show()
-            }
-            return
-        }
-        bluetoothDevice = bluetoothAdapter!!.getRemoteDevice("98:D3:36:81:02:77")//inicializad dispositivo BT con el adaptador
-
-        try {
-            Log.d("homeFragment", "Create a socket")
-            if (bluetoothSocket == null || !isConnected) {
-                val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-                bluetoothSocket = bluetoothDevice.createRfcommSocketToServiceRecord(uuid)
-                Log.d("FirstFragment", "Try to connect")
-                bluetoothSocket?.connect()
-                isConnected = true
-            }
-        } catch (e: IOException) {
-            Log.e("homeFragment", "Error connecting Bluetooth: $e")
-            requireActivity().runOnUiThread {
-                Snackbar.make(requireView(), "Error al conectarse al dispositivo", Snackbar.LENGTH_SHORT).show()
-            }
-            isConnected = false
-        } catch (e: Exception) {
-            Log.e("homeFragment", "General error: $e")
-            requireActivity().runOnUiThread {
-                Snackbar.make(requireView(), "Error desconocido.", Snackbar.LENGTH_SHORT).show()
-            }
-        }
     }
 
     private fun startDataReceiving() {
@@ -258,10 +256,22 @@ class homeFragment : BaseTabFragment() {
                             val line = lines[i].trim()
                             if (line.isNotEmpty()) {
                                 parseData(line)
-                                requireActivity().runOnUiThread { updateUI() }
+                                // Obtener las preferencias y parámetros actuales
+                                val switchVib = viewModel.switchVibState.value ?: 0
+                                val switchFlash = viewModel.switchFlashState.value ?: 0
+                                val cbVibSon = viewModel.cbVibSonState.value ?: 0
+                                val cbVibMov = viewModel.cbVibMovState.value ?: 0
+                                val cbVibGas = viewModel.cbVibGasState.value ?: 0
+                                val cbLuzSon = viewModel.cbLuzSonState.value ?: 0
+                                val cbLuzMov = viewModel.cbLuzMovState.value ?: 0
+                                val cbLuzGas = viewModel.cbLuzGasState.value ?: 0
+
+                                // Actualizar la interfaz de usuario en el hilo principal
+                                requireActivity().runOnUiThread {
+                                    updateUI(switchVib, switchFlash, cbVibSon, cbVibMov, cbVibGas, cbLuzSon, cbLuzMov, cbLuzGas)
+                                }
                             }
                         }
-
                         // Mantener la última parte de datos no procesada
                         stringBuilder.clear()
                         stringBuilder.append(lines.last())
@@ -279,14 +289,14 @@ class homeFragment : BaseTabFragment() {
     private fun parseData(data: String) {
         Log.d("homeFragment", "Parsing data")
         val parts = data.split("|")
-        if (parts.size == 5) {
+        if (parts.size == 3) {
             try {
                 // Parsear todos los datos a el formato correspondiente
-                temperature = parts[0].toFloat()
-                humidity = parts[1].toFloat()
-                movement = parts[2].toInt()
-                sound = parts[3].toInt()
-                gas = parts[4].toInt()
+//                temperature = parts[0].toFloat()
+//                humidity = parts[1].toFloat()
+                movement = parts[0].toInt()
+                sound = parts[1].toInt()
+                gas = parts[2].toInt()
             } catch (e: NumberFormatException) {
                 Log.e("homeFragment", "Error parsing data: ${e.message}")
             }
@@ -294,34 +304,103 @@ class homeFragment : BaseTabFragment() {
             Log.e("homeFragment", "Data format error: expected 5 parts, got ${parts.size}")
         }
     }
-    private fun updateUI() {
-        Log.d("homeFragment", "Updating the User Interface with values - Temperature: $temperature, Humidity: $humidity, Movement: $movement, Sound: $sound Gas: $gas")
-        binding.tempVal.text = String.format("%.1f°C", temperature)
-        binding.humVal.text = String.format("%.1f", humidity)
+    private fun updateUI(switchVib: Int, switchFlash: Int, cbVibSon: Int, cbVibMov: Int, cbVibGas: Int, cbLuzSon: Int, cbLuzMov: Int, cbLuzGas: Int) {
+//        Log.d("homeFragment", "Updating the User Interface with values - Temperature: $temperature, Humidity: $humidity, Movement: $movement, Sound: $sound Gas: $gas")
+//        binding.tempVal.text = String.format("%.1f°C", temperature)
+//        binding.humVal.text = String.format("%.1f", humidity)
 
-        if(sound==1){
-            vibrate(1500L)
-            Log.d("homeFragment","Alerta: el bebe llora")
-            binding.msjAlerta.text="Bebé llorando!"
-            binding.imgBbSon.setImageResource(com.example.audilu.R.drawable.crybaby)
+        // Comprobamos si la vibración está activada
+        if (switchVib == 1) {
+            // Controlar la vibración basada en el sonido
+            if (cbVibSon == 1 && sound == 1) {
+                vibrate(1000L)
+                Log.d("homeFragment","Alerta: el bebe llora")
+                binding.msjSon.text="Bebé llorando!"
+                binding.msjSon.visibility= View.VISIBLE
+                binding.imgBbSon.setImageResource(com.example.audilu.R.drawable.crybaby)
+            } else if (cbVibSon == 1 && sound == 2) {
+                vibrate(1500L)
+                Log.d("homeFragment","Alerta: el bebe llora mucho")
+                binding.msjSon.text="Bebé llorando!"
+                binding.msjSon.visibility= View.VISIBLE
+                binding.imgBbSon.setImageResource(com.example.audilu.R.drawable.crybaby)
+            } else {
+                Log.d("homeFragment","Quitar Alerta: el bebe no llora")
+                binding.msjSon.text="Mensaje de alerta"
+                binding.msjSon.visibility= View.INVISIBLE
+                binding.imgBbSon.setImageResource(com.example.audilu.R.drawable.happybaby)
+            }
+
+            // Controlar la vibración basada en el movimiento
+            if (cbVibMov == 1 && movement == 1) {
+                vibrate(1000L)
+                Log.d("homeFragment","Alerta: el bebe se mueve")
+                binding.msjMov.text="Bebé moviendose!"
+                binding.msjMov.visibility= View.VISIBLE
+                binding.imgBbMov.setImageResource(com.example.audilu.R.drawable.babymov)
+            } else {
+                Log.d("homeFragment","Quitar Alerta: el bebe no se mueve")
+                binding.msjMov.text="Mensaje de alerta"
+                binding.msjMov.visibility= View.INVISIBLE
+                binding.imgBbMov.setImageResource(com.example.audilu.R.drawable.sleepbaby)
+            }
+
+            // Controlar la vibración basada en el gas
+            if (cbVibGas == 1 && gas == 1) {
+                vibrate(1000L)
+                Log.d("homeFragment","Alerta: HAY GAS EN EL AIRE")
+                binding.gasVal.text="DETECTADO"
+            } else {
+                Log.d("homeFragment","Quitar Alerta: NO HAY GAS EN EL AIRE")
+                binding.gasVal.text="NO DETECTADO"
+            }
         }
-        if(sound==2){
-            Log.d("homeFragment","Alerta: el bebe llora mucho")
-            vibrate(1000L)
-            binding.imgBbSon.setImageResource(com.example.audilu.R.drawable.crybaby)
-        }
-        if(movement==1){
-            Log.d("homeFragment","Alerta: el bebe se mueve")
-            vibrate(1500L)
-            binding.msjAlerta.text="Bebé moviendose!"
-            binding.imgBbMov.setImageResource(com.example.audilu.R.drawable.babymov)
-        }
-        if(gas==1){
-            Log.d("homeFragment","Alerta: HAY GAS EN EL AIRE")
-            binding.gasVal.text="GAS DETECTADO"
+        // Comprobamos si el flash está activado
+        if (switchFlash == 1) {
+            // Controlar el flash basado en el sonido
+            if (cbLuzSon == 1 && sound == 1) {
+                flashLightOnOrOff(view, 1000L, 3)
+                Log.d("homeFragment","Alerta: el bebe llora")
+                binding.msjSon.text="Bebé llorando!"
+                binding.msjSon.visibility= View.VISIBLE
+                binding.imgBbSon.setImageResource(com.example.audilu.R.drawable.crybaby)
+            } else if (cbLuzSon == 1 && sound == 2) {
+                flashLightOnOrOff(view, 1000L, 5)
+                Log.d("homeFragment","Alerta: el bebe llora mucho")
+                binding.msjSon.text="Bebé llorando!"
+                binding.msjSon.visibility= View.VISIBLE
+                binding.imgBbSon.setImageResource(com.example.audilu.R.drawable.crybaby)
+            } else {
+                Log.d("homeFragment","Quitar Alerta: el bebe no llora")
+                binding.msjSon.visibility= View.INVISIBLE
+                binding.imgBbSon.setImageResource(com.example.audilu.R.drawable.happybaby)
+            }
+
+            // Controlar el flash basado en el movimiento
+            if (cbLuzMov == 1 && movement == 1) {
+                flashLightOnOrOff(view, 1000L, 3)
+                Log.d("homeFragment","Alerta: el bebe se mueve")
+                binding.msjMov.text="Bebé moviendose!"
+                binding.msjMov.visibility= View.VISIBLE
+                binding.imgBbMov.setImageResource(com.example.audilu.R.drawable.babymov)
+            } else {
+                Log.d("homeFragment","Quitar Alerta: el bebe no se mueve")
+                binding.msjMov.text="Mensaje de alerta"
+                binding.msjMov.visibility= View.INVISIBLE
+                binding.imgBbMov.setImageResource(com.example.audilu.R.drawable.sleepbaby)
+            }
+
+            // Controlar el flash basado en el gas
+            if (cbLuzGas == 1 && gas == 1) {
+                flashLightOnOrOff(view, 1000L, 3)
+                Log.d("homeFragment","Alerta: HAY GAS EN EL AIRE")
+                binding.gasVal.text="DETECTADO"
+            } else {
+                Log.d("homeFragment","Quitar Alerta: NO HAY GAS EN EL AIRE")
+                binding.gasVal.text="NO DETECTADO"
+            }
         }
     }
-    //CODE function FOR VIBRATION
     fun vibrate(duration: Long = 1000L) {
         // Implementación de la función vibrate()
         val vibrator = ContextCompat.getSystemService(requireContext(), Vibrator::class.java)
@@ -334,12 +413,36 @@ class homeFragment : BaseTabFragment() {
                 vibrator.vibrate(duration)
             }
         }
-    }
+    }//CODE function FOR VIBRATION
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun flashLightOnOrOff(v: View?, duration: Long, times: Int) {
+        val cameraListId = cameraM.cameraIdList[0]
+        val handler = Handler(Looper.getMainLooper())
+        var count = 0
+
+        val flashRunnable = object : Runnable {
+            override fun run() {
+                try {
+                    if (count < times * 2) { // Times * 2 because we have ON and OFF states
+                        isFlash = !isFlash
+                        cameraM.setTorchMode(cameraListId, isFlash)
+                        count++
+                        handler.postDelayed(this, duration)
+                    } else {
+                        handler.removeCallbacks(this) // Stop after desired repetitions
+                    }
+                } catch (e: Exception) {
+                    Snackbar.make(requireView(), "Error accessing the flashlight", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+        handler.post(flashRunnable)
+    }// Función para encender/apagar el flash
     private fun disconnectBluetooth() {
         try {
             bluetoothSocket?.close()
             bluetoothSocket = null
-            // Aquí restableces los valores a 0
+            // Reestablecer valores a cero
             updateUIWithDefaultValues()
         } catch (e: IOException) { e.printStackTrace()
             Log.e("homeFragment", "Error desconectando", e)
@@ -349,7 +452,10 @@ class homeFragment : BaseTabFragment() {
         // Suponiendo que tienes TextViews o variables para mostrar los valores
         binding.tempVal.text="0.0"
         binding.humVal.text ="0.0"
-        binding.msjAlerta.visibility= View.INVISIBLE
+        binding.msjMov.visibility= View.INVISIBLE
+        binding.msjSon.visibility= View.INVISIBLE
+        binding.imgBbSon.setImageResource(com.example.audilu.R.drawable.happybaby)
+        binding.imgBbMov.setImageResource(com.example.audilu.R.drawable.sleepbaby)
     }
     override fun onDestroyView() {
         super.onDestroyView()
