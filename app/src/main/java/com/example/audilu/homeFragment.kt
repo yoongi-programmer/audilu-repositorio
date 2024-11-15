@@ -97,6 +97,7 @@ class homeFragment : BaseTabFragment() {
         }
         binding.btConnect.setOnClickListener{
             binding.spinnerBT.visibility= View.VISIBLE
+            Log.d("homeFragment", "Searching for Bluetooth devices: ${binding.spinnerBT.visibility}")
         }
         //SELECCION DE DISPOSITIVO BT AL QUE CONECTARSE------------------------------------
         binding.spinnerBT.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -184,18 +185,18 @@ class homeFragment : BaseTabFragment() {
             val pairedDevices: Set<BluetoothDevice> =
                 bluetoothAdapter!!.bondedDevices// Obtener la lista de dispositivos Bluetooth emparejados
 
-            if (pairedDevices.isNotEmpty()) {
-                devicesBluetooth =
-                    pairedDevices.toMutableList()// Guardar la lista de dispositivos Bluetooth
+            if (!pairedDevices.isNullOrEmpty()) {
+                devicesBluetooth = pairedDevices.toMutableList()// Guardar la lista de dispositivos Bluetooth
 
                 // Convertir la lista de dispositivos en una lista de nombres para mostrar
-                val deviceNames = devicesBluetooth.map { it.name }.toMutableList()
+                val deviceNames = devicesBluetooth.mapNotNull { it.name }.toMutableList()
 
-                // Crear y establecer el adaptador para la lista de nombres de dispositivos
-                val adapter = ArrayAdapter(requireContext(), R.layout.simple_expandable_list_item_1, deviceNames
-                )
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                binding.spinnerBT.adapter = adapter
+                if (deviceNames.isNotEmpty()) {
+                    // Crear y establecer el adaptador para la lista de nombres de dispositivos
+                    val adapter = ArrayAdapter(requireContext(), R.layout.simple_expandable_list_item_1, deviceNames)
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    binding.spinnerBT.adapter = adapter
+                }
             } else {
                 // Mostrar mensaje si no hay dispositivos emparejados
                 Snackbar.make(requireView(), "No hay dispositivos bluetooth emparejados", Snackbar.LENGTH_SHORT).show()
@@ -289,14 +290,14 @@ class homeFragment : BaseTabFragment() {
     private fun parseData(data: String) {
         Log.d("homeFragment", "Parsing data")
         val parts = data.split("|")
-        if (parts.size == 3) {
+        if (parts.size == 5) {
             try {
-                // Parsear todos los datos a el formato correspondiente
-//                temperature = parts[0].toFloat()
-//                humidity = parts[1].toFloat()
-                movement = parts[0].toInt()
-                sound = parts[1].toInt()
-                gas = parts[2].toInt()
+               // Parsear todos los datos a el formato correspondiente
+                temperature = parts[0].toFloat()
+                humidity = parts[1].toFloat()
+                movement = parts[2].toInt()
+                sound = parts[3].toInt()
+                gas = parts[4].toInt()
             } catch (e: NumberFormatException) {
                 Log.e("homeFragment", "Error parsing data: ${e.message}")
             }
@@ -305,9 +306,9 @@ class homeFragment : BaseTabFragment() {
         }
     }
     private fun updateUI(switchVib: Int, switchFlash: Int, cbVibSon: Int, cbVibMov: Int, cbVibGas: Int, cbLuzSon: Int, cbLuzMov: Int, cbLuzGas: Int) {
-//        Log.d("homeFragment", "Updating the User Interface with values - Temperature: $temperature, Humidity: $humidity, Movement: $movement, Sound: $sound Gas: $gas")
-//        binding.tempVal.text = String.format("%.1f°C", temperature)
-//        binding.humVal.text = String.format("%.1f", humidity)
+        Log.d("homeFragment", "Updating the User Interface with values - Temperature: $temperature, Humidity: $humidity, Movement: $movement, Sound: $sound Gas: $gas")
+        binding.tempVal.text = String.format("%.1f°C", temperature)
+        binding.humVal.text = String.format("%.1f", humidity)
 
         // Comprobamos si la vibración está activada
         if (switchVib == 1) {
